@@ -30,8 +30,26 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String acronym = "";
+		StringBuffer currPhrase = new StringBuffer(phrase);
+
+	    for(int i = 0; i < currPhrase.length(); i++) {
+	    	if(currPhrase.charAt(i) == '-') {
+	    		currPhrase.replace(i,i+1," ");
+	    	}
+	    }
+	    
+	    String fullPhrase = currPhrase.toString();
+	    String upperCasedPhrase = fullPhrase.toUpperCase();
+	    
+	    String[] individualWordsOfTheString = upperCasedPhrase.split(" ");
+	    
+	    for(int i = 0; i < individualWordsOfTheString.length; i++) {
+	      String currentWord = individualWordsOfTheString[i];
+	      acronym += String.valueOf(currentWord.charAt(0));
+	    }
+
+	    return acronym;
 	}
 
 	/**
@@ -84,18 +102,21 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			return ((this.sideOne == this.sideTwo) &&
+					(this.sideTwo == this.sideThree) &&
+					(this.sideThree == this.sideOne));
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			return ((this.sideOne == this.sideTwo) ||
+					(this.sideTwo == this.sideThree) ||
+					(this.sideThree == this.sideOne));
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			return ((this.sideOne != this.sideTwo) &&
+					(this.sideTwo != this.sideThree) &&
+					(this.sideThree != this.sideOne));
 		}
 
 	}
@@ -116,8 +137,53 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int scrabbleScore = 0;
+		String upperCasedString = string.toUpperCase();
+
+		for(int i = 0; i < upperCasedString.length(); i++) {
+			if(upperCasedString.charAt(i) == 'A' ||
+			   upperCasedString.charAt(i) == 'E' ||
+			   upperCasedString.charAt(i) == 'I' ||
+			   upperCasedString.charAt(i) == 'O' ||
+			   upperCasedString.charAt(i) == 'U' ||
+			   upperCasedString.charAt(i) == 'L' ||
+			   upperCasedString.charAt(i) == 'N' ||
+			   upperCasedString.charAt(i) == 'R' ||
+			   upperCasedString.charAt(i) == 'S' ||
+			   upperCasedString.charAt(i) == 'T'){
+				scrabbleScore += 1;
+			}
+			else if(upperCasedString.charAt(i) == 'D' ||
+					upperCasedString.charAt(i) == 'G') {
+				scrabbleScore += 2;
+			}
+			else if(upperCasedString.charAt(i) == 'B' ||
+					upperCasedString.charAt(i) == 'C' ||
+					upperCasedString.charAt(i) == 'M' ||
+					upperCasedString.charAt(i) == 'P') {
+				scrabbleScore += 3;
+			}
+			else if(upperCasedString.charAt(i) == 'F' ||
+					upperCasedString.charAt(i) == 'H' ||
+					upperCasedString.charAt(i) == 'V' ||
+					upperCasedString.charAt(i) == 'W' ||
+					upperCasedString.charAt(i) == 'Y') {
+				scrabbleScore += 4;
+			}
+			else if(upperCasedString.charAt(i) == 'K') {
+				scrabbleScore += 5;
+			}
+			else if(upperCasedString.charAt(i) == 'J' ||
+					upperCasedString.charAt(i) == 'X') {
+				scrabbleScore += 8;
+			}
+			else if(upperCasedString.charAt(i) == 'Q' ||
+					upperCasedString.charAt(i) == 'Z') {
+				scrabbleScore += 10;
+			}
+		}
+
+		return scrabbleScore;
 	}
 
 	/**
@@ -152,8 +218,36 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String finalNumber = "";
+		char[] specialCharacters = {'=', '_', '!', '@', '#', '$', '%', '^', '&', '*', '{', '}', '[', ']', '|', ':', ';', '"', '<', '>', ',', '?', '/'};
+		
+		for(int i = 0; i < string.length(); i++) {
+			if(Character.isDigit(string.charAt(i))) {
+				finalNumber += string.charAt(i);
+			}
+			else if(Character.isLetter(string.charAt(i))) {
+				throw new IllegalArgumentException();
+			}
+			else{
+		        for(int j = 0; j < specialCharacters.length; j++) {
+		        	if(string.charAt(i) == specialCharacters[j]) {
+		        		throw new IllegalArgumentException();
+		        	}
+		        }
+		    }
+		}
+		
+		if(finalNumber.length() >= 11 && finalNumber.charAt(0) == '1'){
+			StringBuilder temp = new StringBuilder(finalNumber);
+			temp.deleteCharAt(0);
+			finalNumber = temp.toString();
+		}
+		
+		if(finalNumber.length() > 11) {
+			throw new IllegalArgumentException();
+		}
+		
+		return finalNumber;
 	}
 
 	/**
