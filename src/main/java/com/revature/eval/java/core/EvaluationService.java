@@ -1,6 +1,9 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -260,8 +263,31 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		Map<String, Integer> wordCount = new HashMap();
+	
+		String newStr = string.replace("\n", "").replace("\r", "");
+		newStr = newStr.replaceAll("[^a-z A-Z \n]", " ");
+		String[] wordsInString = newStr.split(" ");
+		
+		
+		for(int i = 0; i < wordsInString.length; i++) {
+			if(wordCount.isEmpty()) {
+				wordCount.put(wordsInString[i], 1);
+			}
+			
+			else if(!wordCount.isEmpty()) {
+				if(wordCount.containsKey(wordsInString[i])) {
+					wordCount.put(wordsInString[i], wordCount.get(wordsInString[i]) + 1);
+				}
+				
+				else {
+					wordCount.put(wordsInString[i], 1);
+				}
+			}
+		}
+		
+		return wordCount;
 	}
 
 	/**
@@ -303,8 +329,25 @@ public class EvaluationService {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+			
+			int startOfList = 0;
+			int endOfList = sortedList.size() - 1;
+			int middleIndexOfList = (startOfList + endOfList)/2;
+			
+			while(!sortedList.get(middleIndexOfList).equals(t)) {
+				
+				middleIndexOfList = startOfList + endOfList;
+				if(sortedList.get(middleIndexOfList).hashCode() < t.hashCode()) {
+					startOfList = middleIndexOfList + 1;
+				}
+				else {
+					endOfList = middleIndexOfList - 1;
+				}
+				
+			}
+			
+			return middleIndexOfList;
+			
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -340,8 +383,53 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		char temp;
+		string = string.toLowerCase();
+		String pigLatin = "";
+		String[] wordsArray = string.split(" ");
+		
+		for(int i = 0; i < wordsArray.length; i++) {
+		
+			StringBuilder pigLatinWordBuilder = new StringBuilder(wordsArray[i]);
+			
+			while(pigLatinWordBuilder.charAt(0) != 'a' && pigLatinWordBuilder.charAt(0) != 'e' 
+				  && pigLatinWordBuilder.charAt(0) != 'i' && pigLatinWordBuilder.charAt(0) != 'o' 
+				  && pigLatinWordBuilder.charAt(0) != 'u') {
+				
+				temp = pigLatinWordBuilder.charAt(0);
+				pigLatinWordBuilder.append(temp);
+				pigLatinWordBuilder.deleteCharAt(0);
+				
+				if(temp == 'q' && pigLatinWordBuilder.charAt(0) == 'u') {
+					temp = pigLatinWordBuilder.charAt(0);
+					pigLatinWordBuilder.append(temp);
+					pigLatinWordBuilder.deleteCharAt(0);
+				}
+				
+			}
+			
+			pigLatinWordBuilder.append("ay");
+			wordsArray[i] = pigLatinWordBuilder.toString();
+		
+		}
+		
+
+		if(wordsArray.length > 1) {
+			for(int i = 0; i < wordsArray.length; i++) {
+				if(i == wordsArray.length - 1) {
+					pigLatin += wordsArray[i];
+				}
+				else {
+					pigLatin += wordsArray[i] + " ";
+				}	
+			}
+		}
+		else {
+			pigLatin = wordsArray[0];
+		}
+		
+		return pigLatin;
 	}
 
 	/**
@@ -360,8 +448,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		boolean isArmStrongNumber = false;
+		String userInput = String.valueOf(input);
+		double temp = 0;
+		double currentDigitInInput;
+	
+		for(int i = 0; i < userInput.length(); i++) {
+			currentDigitInInput = Character.digit(userInput.charAt(i), 10);
+			temp += Math.pow(currentDigitInInput, userInput.length());
+		}
+		
+		if(temp == input) {
+			isArmStrongNumber = true;
+		}
+		
+		return isArmStrongNumber;
 	}
 
 	/**
@@ -374,9 +475,18 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
+	
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		List<Long> primeFactorTreeNumbers = new ArrayList<Long>();
+		
+		for(long i = 2; i <= l; i++) {
+			while(l%i==0) {
+				primeFactorTreeNumbers.add(i);
+				l = l/i;
+			}
+		}
+		
+		return primeFactorTreeNumbers;
 	}
 
 	/**
@@ -414,8 +524,47 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String rotatedString = "";
+		      String lowerCasedInput = string.toLowerCase();
+		      Character[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+
+		      ArrayList<Character> cipherStorage = new ArrayList<Character>();
+		      HashMap<Character,Character> alphabetToCipherMatching = new HashMap<Character,Character>();
+
+		      if(key == 26) {
+		        rotatedString = string;
+		      }
+
+		      else {
+		        for(int i = 0; i < (alphabet.length)-key; i++) {
+		          cipherStorage.add(alphabet[i]);
+		        }
+
+		        for(int i = alphabet.length-1; i >= (alphabet.length)-key; i--) {
+		          cipherStorage.add(0, alphabet[i]);
+		        }
+
+		        for(int i = 0; i < alphabet.length; i++) {
+		          alphabetToCipherMatching.put(cipherStorage.get(i), alphabet[i]);
+		        }
+
+		        for(int i = 0; i < string.length(); i++) {
+		          if(Character.isLetter(string.charAt(i))){
+		            if(Character.isUpperCase(string.charAt(i))){
+		              rotatedString += Character.toUpperCase(alphabetToCipherMatching.get(lowerCasedInput.charAt(i)));
+		            }
+		            else if(Character.isLowerCase(string.charAt(i))){
+		              rotatedString += alphabetToCipherMatching.get(string.charAt(i));
+		            }
+		          }
+		          else{
+		            rotatedString += string.charAt(i);
+		          }
+		        }
+		      }
+			
+			return rotatedString;
 		}
 
 	}
@@ -432,9 +581,40 @@ public class EvaluationService {
 	 * @param i
 	 * @return
 	 */
+	
+	public boolean isPrimeNum(int num) {
+		
+		boolean isPrime = true;
+		
+		for(int i = 2; i < num; i++) {
+			if(num%i == 0) {
+				isPrime = false;
+			}
+		}
+		
+		return isPrime;
+		
+	}
+	
 	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int counter = 0;
+		int currentNum = 2;
+		int answer = 0;
+		
+		if(i < 1) {
+			throw new IllegalArgumentException();
+		}
+		else {
+			while(counter != i) {
+				if(isPrimeNum(currentNum)) {
+					counter+=1;
+					answer = currentNum;
+				}
+				currentNum++;
+			}
+		}
+		
+		return answer;
 	}
 
 	/**
@@ -470,8 +650,49 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String encodedString = "";
+		      string = string.toLowerCase();
+		        Character[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		                          'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+		      int counter = 1;
+		        ArrayList<Character> cipherStorage = new ArrayList<Character>();
+		        HashMap<Character,Character> alphabetToCipherMatching = new HashMap<Character,Character>();
+
+		            for(int i = 0; i < alphabet.length; i++) {
+		              cipherStorage.add(0, alphabet[i]);
+		            }
+
+		            for(int i = 0; i < alphabet.length; i++) {
+		              alphabetToCipherMatching.put(cipherStorage.get(i), alphabet[i]);
+		            }
+
+		            for(int i = 0; i < string.length(); i++) {
+		              if(Character.isLetter(string.charAt(i))){
+		                if(counter == 5){
+		                  encodedString += alphabetToCipherMatching.get(string.charAt(i));
+		                  encodedString += " ";
+		                  counter = 0;
+		                }
+		                else{
+		                  encodedString += alphabetToCipherMatching.get(string.charAt(i));
+		                }
+		                counter++;
+		              }
+		              else if(Character.isDigit(string.charAt(i))){
+		                if(counter == 5){
+		                  encodedString += string.charAt(i);;
+		                  encodedString += " ";
+		                  counter = 0;
+		                }
+		                else{
+		                  encodedString += string.charAt(i);
+		                }
+		                counter++;
+		              }
+
+		            }
+
+		      return encodedString.trim();
 		}
 
 		/**
@@ -481,8 +702,31 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String decodedString = "";
+		    string = string.toLowerCase();
+		    Character[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		                          'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+		    ArrayList<Character> cipherStorage = new ArrayList<Character>();
+		    HashMap<Character,Character> alphabetToCipherMatching = new HashMap<Character,Character>();
+
+		    for(int i = 0; i < alphabet.length; i++) {
+		    	cipherStorage.add(0, alphabet[i]);
+		    }
+
+		    for(int i = 0; i < alphabet.length; i++) {
+		        alphabetToCipherMatching.put(alphabet[i], cipherStorage.get(i));
+		    }
+		 
+		    for(int i = 0; i < string.length(); i++) {
+		    	if(Character.isLetter(string.charAt(i))){
+	                	decodedString += alphabetToCipherMatching.get(string.charAt(i));
+	                }
+		    	else if(Character.isDigit(string.charAt(i))){
+	                	decodedString += string.charAt(i);
+	              }
+		    }
+		    
+		    return decodedString.trim();
 		}
 	}
 
