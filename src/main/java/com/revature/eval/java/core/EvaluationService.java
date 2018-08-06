@@ -1,5 +1,8 @@
 package com.revature.eval.java.core;
 
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
@@ -264,7 +267,7 @@ public class EvaluationService {
 	 */
 	public Map<String, Integer> wordCount(String string) {
 		
-		Map<String, Integer> wordCount = new HashMap();
+		Map<String, Integer> wordCount = new HashMap<String, Integer>();
 	
 		String newStr = string.replace("\n", "").replace("\r", "");
 		newStr = newStr.replaceAll("[^a-z A-Z \n]", " ");
@@ -753,8 +756,43 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		
+		boolean validISBN = false;
+		int counter = 10;
+		int total = 0;
+		int finalAns = 0;
+		
+		for(int i = 0; i < string.length(); i++) {
+			if(string.charAt(string.length()-1)!='X' && !Character.isDigit(string.charAt(string.length()-1))) {
+				validISBN = false;
+				return validISBN;
+			}
+			
+			else {
+				if(Character.isDigit(string.charAt(i))) {
+					total += Character.getNumericValue(string.charAt(i)) * counter;
+					counter--;
+				}
+				
+				else if(i == string.length()-1 && string.charAt(i) == 'X') {
+					total += 10 * counter;
+					counter--;
+				}
+				
+				else if(i != string.length()-1 && Character.isLetter(string.charAt(i))) {
+					validISBN = false;
+					return validISBN;
+				}
+			}
+		}
+		
+		finalAns = total % 11;
+		
+		if(finalAns == 0) {
+			validISBN = true;
+		}
+		
+		return validISBN;
 	}
 
 	/**
@@ -771,8 +809,32 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		boolean pangram = true;
+		int temp = 0;
+		string = string.toLowerCase();
+		string  = string.replaceAll(" ", "");
+		Character[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                				'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+		HashMap<Character, Integer> pangramCheck = new HashMap<Character, Integer>();
+		
+		for(int i = 0; i < alphabet.length; i++) {
+			pangramCheck.put(alphabet[i], 0);
+		}
+		
+		for(int i = 0; i < string.length(); i++) {
+			temp = pangramCheck.get(string.charAt(i));
+			temp += 1;
+			pangramCheck.put(string.charAt(i), temp);
+		}
+		
+		for(int value : pangramCheck.values()) {
+			if(value == 0) {
+				pangram = false;
+				return pangram;
+			}
+		}
+		
+		return pangram;
 	}
 
 	/**
@@ -784,8 +846,19 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		if(given.isSupported(ChronoUnit.SECONDS)) {
+			given = given.plus(1000000000, ChronoUnit.SECONDS);
+			return given;
+		}
+		
+		else {
+			LocalDate timeWithSeconds = (LocalDate)given;
+			LocalDateTime fullInfo = timeWithSeconds.atTime(0, 0, 0);
+			fullInfo = fullInfo.plus((long)1000000000, ChronoUnit.SECONDS);
+			return fullInfo;
+		}
+	
 	}
 
 	/**
@@ -802,8 +875,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		int result = 0;
+		boolean alreadyAdded = false;
+		
+		for(int j = 1; j < i; j++) {
+			for(int k = 0; k < set.length; k++) {
+				if(j%set[k] == 0 && !alreadyAdded) {
+					result += j;
+					alreadyAdded = true;
+				}
+			}
+			alreadyAdded = false;
+		}
+		
+		return result;
 	}
 
 	/**
@@ -843,8 +929,51 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		boolean isValid = false;
+		int counter = 1;
+		int tempNum = 0;
+		int total = 0;
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
+		
+		if(string.length() <= 1) {
+			return isValid;
+		}
+		
+		string = string.replaceAll(" ", "");
+		for(int i = 0; i < string.length(); i++) {
+			if(Character.isLetter(string.charAt(i))) {
+				return isValid;
+			}
+			else {
+				if(counter == 2) {
+					tempNum = Character.getNumericValue(string.charAt(i));
+					tempNum *= 2;
+					if(tempNum > 9) {
+						tempNum -= 9;
+					}
+					numbers.add(tempNum);
+					counter = 1;
+				}
+				else {
+					tempNum = Character.getNumericValue(string.charAt(i));
+					if(tempNum > 9) {
+						tempNum -= 9;
+					}
+					numbers.add(tempNum);
+					counter += 1;
+				}
+			}
+		}
+		
+		for(int digit : numbers) {
+			total += digit;
+		}
+		
+		if(total % 10 == 0) {
+			isValid = true;
+		}
+		
+		return isValid;
 	}
 
 	/**
@@ -875,8 +1004,42 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		String[] theWordProblem; 
+		int answer = 0;
+		int num1 = 0;
+		int num2 = 0;
+		String operation = "";
+		
+		string = string.replace("What is ", "");
+		string = string.replaceAll("by", "");
+		string = string.replace("?", "");
+		string = string.replace("  ", " ");
+		
+		theWordProblem = string.split(" ");
+		
+		num1 = Integer.parseInt(theWordProblem[0]);
+		num2 = Integer.parseInt(theWordProblem[2]);
+		operation = theWordProblem[1];
+		
+		
+		if(operation.contains("plus")) {
+			answer = num1 + num2; 
+		}
+		
+		else if(operation.contains("minus")) {
+			answer = num1 - num2; 
+		}
+		
+		else if(operation.contains("multiplied")) {
+			answer = num1 * num2; 
+		}
+		
+		else if(operation.contains("divided")) {
+			answer = num1 / num2; 
+		}
+		
+		return answer;
 	}
 
 }
