@@ -453,8 +453,8 @@ public class EvaluationService {
 	public boolean isArmstrongNumber(int input) {
 		boolean isArmStrongNumber = false;
 		String userInput = String.valueOf(input);
-		double temp = 0;
-		double currentDigitInInput;
+		int temp = 0;
+		int currentDigitInInput;
 	
 		for(int i = 0; i < userInput.length(); i++) {
 			currentDigitInInput = Character.digit(userInput.charAt(i), 10);
