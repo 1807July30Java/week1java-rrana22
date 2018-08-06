@@ -855,7 +855,7 @@ public class EvaluationService {
 		else {
 			LocalDate timeWithSeconds = (LocalDate)given;
 			LocalDateTime fullInfo = timeWithSeconds.atTime(0, 0, 0);
-			fullInfo = fullInfo.plus((long)1000000000, ChronoUnit.SECONDS);
+			fullInfo = fullInfo.plus(1000000000, ChronoUnit.SECONDS);
 			return fullInfo;
 		}
 	
